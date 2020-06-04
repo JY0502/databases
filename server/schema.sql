@@ -14,7 +14,7 @@ CREATE TABLE messages (
   id INT AUTO_INCREMENT,
   userId INT,
   msgText VARCHAR(200),
-  createdAt DATETIME,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES users(id)
 );

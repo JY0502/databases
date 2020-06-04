@@ -10,13 +10,14 @@ describe('Persistent Node Chat Server', function() {
 
   beforeEach(function(done) {
     dbConnection = mysql.createConnection({
-      user: 'student',
-      password: 'student',
+      host: 'localhost',
+      user: 'root',
+      password: 'rootpass@',
       database: 'chat'
     });
     dbConnection.connect();
 
-       var tablename = "users"; // TODO: fill this out
+    var tablename = 'messages'; // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
@@ -31,17 +32,21 @@ describe('Persistent Node Chat Server', function() {
     // Post the user to the chat server.
     request({
       method: 'POST',
-      uri: 'http://127.0.0.1:3000/classes/users',
+      uri: 'http://127.0.0.1:3001/users',
       json: { username: 'Valjean' }
-    }, function () {
+    }, function (err, res, body) {
       // Post a message to the node chat server:
+      if (err) {
+        console.log('SPEC user post request err', err);
+      }
+      console.log('SPEC user post request body', body);
       request({
         method: 'POST',
-        uri: 'http://127.0.0.1:3000/classes/messages',
+        uri: 'http://127.0.0.1:3001/messages',
         json: {
           username: 'Valjean',
           message: 'In mercy\'s name, three days is all I need.',
-          roomname: 'Hello'
+          roomname: 'hello'
         }
       }, function () {
         // Now if we look in the database, we should find the
@@ -54,10 +59,14 @@ describe('Persistent Node Chat Server', function() {
 
         dbConnection.query(queryString, queryArgs, function(err, results) {
           // Should have one result:
+          if (err) {
+            console.log('err in query:', err);
+          }
+          console.log('results in query:', results);
           expect(results.length).to.equal(1);
 
           // TODO: If you don't have a column named text, change this test.
-          expect(results[0].text).to.equal('In mercy\'s name, three days is all I need.');
+          expect(results[0].msgText).to.equal('In mercy\'s name, three days is all I need.');
 
           done();
         });
