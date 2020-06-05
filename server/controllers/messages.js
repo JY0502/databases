@@ -1,28 +1,30 @@
 var models = require('../models');
 //use models methods
 module.exports = {
-  get: function (req, res, next) {
+  get: function (req, res) {
+    console.log('controller GET');
     //use models.messages.getAll
     models.messages.getAll((err, results) => {
       if (err) {
         console.log(err);
+        console.log('error in controller');
       } else {
-        res.status(200).json(results);
+        res.json(results);
       }
     });
-    next();
+
     //respond with all messages
   }, // a function which handles a get request for all messages-- this function help us get all messages
-  post: function (req, res, next) {
+  post: function (req, res) {
     console.log('controller messages.js POST REQUEST:', req.body);
-    models.messages.create(req.body, (err, results) => {
+    var params = [req.body.username, req.body.message];
+    models.messages.create(params, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        res.status(200).json(results);
+        res.status(200).json(results)
       }
     });
-    next();
   }// a function which handles posting a message to the database
 };
 

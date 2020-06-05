@@ -17,10 +17,12 @@ describe('Persistent Node Chat Server', function() {
     });
     dbConnection.connect();
 
-    var tablename = 'messages'; // TODO: fill this out
+    var tablename = 'messages';
+   // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
+
     dbConnection.query('truncate ' + tablename, done);
   });
 
@@ -32,7 +34,7 @@ describe('Persistent Node Chat Server', function() {
     // Post the user to the chat server.
     request({
       method: 'POST',
-      uri: 'http://127.0.0.1:3001/users',
+      uri: 'http://127.0.0.1:3000/classes/users',
       json: { username: 'Valjean' }
     }, function (err, res, body) {
       // Post a message to the node chat server:
@@ -42,7 +44,7 @@ describe('Persistent Node Chat Server', function() {
       console.log('SPEC user post request body', body);
       request({
         method: 'POST',
-        uri: 'http://127.0.0.1:3001/messages',
+        uri: 'http://127.0.0.1:3000/classes/messages',
         json: {
           username: 'Valjean',
           message: 'In mercy\'s name, three days is all I need.',
@@ -59,10 +61,10 @@ describe('Persistent Node Chat Server', function() {
 
         dbConnection.query(queryString, queryArgs, function(err, results) {
           // Should have one result:
-          if (err) {
-            console.log('err in query:', err);
-          }
-          console.log('results in query:', results);
+          // if (err) {
+          //   console.log('err in query:', err);
+          // }
+          // console.log('results in query:', results);
           expect(results.length).to.equal(1);
 
           // TODO: If you don't have a column named text, change this test.

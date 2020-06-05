@@ -4,8 +4,8 @@ module.exports = {
   getAll: function (callback) {
     //send a query to db to get all messages
     //create a queryString variable
-    var queryString = 'SELECT * FROM messages INNER JOIN users ON messages.userId = users.Id;';
-    db.query(queryString, (err, results, fields) => {
+    var queryString = `SELECT * FROM messages INNER JOIN users ON messages.userId = users.Id`;
+    db.query(queryString, (err, results) => {
       if (err) {
         console.log(err);
         callback(err);
@@ -15,12 +15,11 @@ module.exports = {
       }
     });
   }, // a function which produces all the messages
-  create: function (message, callback) {
-    console.log('modesl messages.js CREATE:', message);
-
-    var newMessage = `INSERT INTO messages values (0,(select users.id from users where users.username = ${message.username}), ${message.message}, default);`;
+  create: function (params, callback) {
+    console.log('PARAMS:', params);
+    var newMessage = 'insert into messages(userId, msgText) values ((select users.id from users where users.username = ?), ?})';
     //insert into message values (0,(select users.id from users where users.name = message.username), message.message, message.createdAt);
-    db.query(newMessage, (err, results, fields) => {
+    db.query(newMessage, params, (err, results, fields) => {
       if (err) {
         console.log(err);
         callback(err);

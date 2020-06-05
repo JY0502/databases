@@ -8,7 +8,8 @@ var connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'rootpass@',
-  database: 'chat'
+  database: 'chat',
+  multipleStatements: true
 });
 
 connection.connect(function(err) {
@@ -19,10 +20,5 @@ connection.connect(function(err) {
   console.log('connected as id ' + connection.threadId);
 });
 
-// connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-//   if (error) throw error;
-//   console.log('The solution is: ', results[0].solution);
-// });
-
-connection.end();
+// connection.end();
 module.exports = connection;
